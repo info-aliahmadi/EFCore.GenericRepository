@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace TanvirArjel.EFCore.GenericRepository
@@ -23,7 +24,7 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns>Returns <see cref="IQueryable{T}"/>.</returns>
-        IQueryable<TEntity> GetQueryable<TEntity>()
+        DbSet<TEntity> GetQueryable<TEntity>()
             where TEntity : class;
 
         /// <summary>
@@ -234,7 +235,7 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         Task<TEntity> GetByIdAsync<TEntity>(object id, CancellationToken cancellationToken = default)
-            where TEntity : class;
+            where TEntity : BaseEntity<object>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -248,7 +249,7 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         Task<TEntity> GetByIdAsync<TEntity>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
-            where TEntity : class;
+            where TEntity : BaseEntity<object>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -263,7 +264,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             object id,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             CancellationToken cancellationToken = default)
-            where TEntity : class;
+            where TEntity : BaseEntity<object>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -282,7 +283,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default)
-            where TEntity : class;
+            where TEntity : BaseEntity<object>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the specified projected entity
@@ -299,7 +300,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             object id,
             Expression<Func<TEntity, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
-            where TEntity : class;
+            where TEntity : BaseEntity<object>;
 
         /// <summary>
         /// This method takes <see cref="Expression{Func}"/> as parameter and returns <typeparamref name="TEntity"/>.
@@ -451,7 +452,7 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="bool"/>.</returns>
         Task<bool> ExistsByIdAsync<TEntity>(object id, CancellationToken cancellationToken = default)
-            where TEntity : class;
+            where TEntity : BaseEntity<object>;
 
         /// <summary>
         /// This method returns all count in <see cref="int"/> type.

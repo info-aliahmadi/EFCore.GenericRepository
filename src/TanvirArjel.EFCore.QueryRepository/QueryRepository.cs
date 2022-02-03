@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -29,7 +30,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             _dbContext = dbContext;
         }
 
-        public IQueryable<T> GetQueryable<T>()
+        public DbSet<T> GetQueryable<T>()
             where T : class
         {
             return _dbContext.Set<T>();
@@ -251,7 +252,7 @@ namespace TanvirArjel.EFCore.GenericRepository
         }
 
         public Task<T> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default)
-            where T : class
+            where T : BaseEntity<object>
         {
             if (id == null)
             {
@@ -262,7 +263,7 @@ namespace TanvirArjel.EFCore.GenericRepository
         }
 
         public Task<T> GetByIdAsync<T>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
-            where T : class
+            where T : BaseEntity<object>
         {
             if (id == null)
             {
@@ -276,7 +277,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             object id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             CancellationToken cancellationToken = default)
-            where T : class
+            where T : BaseEntity<object>
         {
             if (id == null)
             {
@@ -286,44 +287,17 @@ namespace TanvirArjel.EFCore.GenericRepository
             return GetByIdAsync(id, includes, false, cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync<T>(
-            object id,
+        public async Task<T> GetByIdAsync<T,T2>(
+            T2 id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             bool asNoTracking = false,
             CancellationToken cancellationToken = default)
-            where T : class
+            where T : BaseEntity<T2>
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
-
-            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
-
-            string primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
-            Type primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
-
-            if (primaryKeyName == null || primaryKeyType == null)
-            {
-                throw new ArgumentException("Entity does not have any primary key defined", nameof(id));
-            }
-
-            object primayKeyValue = null;
-
-            try
-            {
-                primayKeyValue = Convert.ChangeType(id, primaryKeyType, CultureInfo.InvariantCulture);
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException($"You can not assign a value of type {id.GetType()} to a property of type {primaryKeyType}");
-            }
-
-            ParameterExpression pe = Expression.Parameter(typeof(T), "entity");
-            MemberExpression me = Expression.Property(pe, primaryKeyName);
-            ConstantExpression constant = Expression.Constant(primayKeyValue, primaryKeyType);
-            BinaryExpression body = Expression.Equal(me, constant);
-            Expression<Func<T, bool>> expressionTree = Expression.Lambda<Func<T, bool>>(body, new[] { pe });
 
             IQueryable<T> query = _dbContext.Set<T>();
 
@@ -336,8 +310,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             {
                 query = query.AsNoTracking();
             }
-
-            T enity = await query.FirstOrDefaultAsync(expressionTree, cancellationToken).ConfigureAwait(false);
+            T enity = await query.FirstOrDefaultAsync(x => x.Id == id).FirstOrDefaultAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             return enity;
         }
 
@@ -345,7 +318,7 @@ namespace TanvirArjel.EFCore.GenericRepository
             object id,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
-            where T : class
+            where T : BaseEntity<object>
         {
             if (id == null)
             {
@@ -357,36 +330,9 @@ namespace TanvirArjel.EFCore.GenericRepository
                 throw new ArgumentNullException(nameof(selectExpression));
             }
 
-            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
-
-            string primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
-            Type primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
-
-            if (primaryKeyName == null || primaryKeyType == null)
-            {
-                throw new ArgumentException("Entity does not have any primary key defined", nameof(id));
-            }
-
-            object primayKeyValue = null;
-
-            try
-            {
-                primayKeyValue = Convert.ChangeType(id, primaryKeyType, CultureInfo.InvariantCulture);
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException($"You can not assign a value of type {id.GetType()} to a property of type {primaryKeyType}");
-            }
-
-            ParameterExpression pe = Expression.Parameter(typeof(T), "entity");
-            MemberExpression me = Expression.Property(pe, primaryKeyName);
-            ConstantExpression constant = Expression.Constant(primayKeyValue, primaryKeyType);
-            BinaryExpression body = Expression.Equal(me, constant);
-            Expression<Func<T, bool>> expressionTree = Expression.Lambda<Func<T, bool>>(body, new[] { pe });
-
             IQueryable<T> query = _dbContext.Set<T>();
 
-            return await query.Where(expressionTree).Select(selectExpression)
+            return await query.Where(x => x.Id == id).Select(selectExpression)
                 .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
@@ -530,43 +476,16 @@ namespace TanvirArjel.EFCore.GenericRepository
         }
 
         public async Task<bool> ExistsByIdAsync<T>(object id, CancellationToken cancellationToken = default)
-           where T : class
+           where T : BaseEntity<object>
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
-
-            string primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
-            Type primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
-
-            if (primaryKeyName == null || primaryKeyType == null)
-            {
-                throw new ArgumentException("Entity does not have any primary key defined", nameof(id));
-            }
-
-            object primayKeyValue = null;
-
-            try
-            {
-                primayKeyValue = Convert.ChangeType(id, primaryKeyType, CultureInfo.InvariantCulture);
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException($"You can not assign a value of type {id.GetType()} to a property of type {primaryKeyType}");
-            }
-
-            ParameterExpression pe = Expression.Parameter(typeof(T), "entity");
-            MemberExpression me = Expression.Property(pe, primaryKeyName);
-            ConstantExpression constant = Expression.Constant(primayKeyValue, primaryKeyType);
-            BinaryExpression body = Expression.Equal(me, constant);
-            Expression<Func<T, bool>> expressionTree = Expression.Lambda<Func<T, bool>>(body, new[] { pe });
-
             IQueryable<T> query = _dbContext.Set<T>();
 
-            bool isExistent = await query.AnyAsync(expressionTree, cancellationToken).ConfigureAwait(false);
+            bool isExistent = await query.AnyAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
             return isExistent;
         }
 

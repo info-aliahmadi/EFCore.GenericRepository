@@ -19,7 +19,9 @@ namespace AspNetCore5._0.Data
             }
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Employee>().HasKey(e => e.EmployeeId);
+            modelBuilder.Entity<Employee>().HasKey(e => e.Id);
+
+
         }
 
         public DbSet<Employee> Employee { get; set; }

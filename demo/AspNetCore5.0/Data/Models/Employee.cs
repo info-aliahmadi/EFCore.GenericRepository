@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TanvirArjel.EFCore.GenericRepository;
 
 namespace AspNetCore5._0.Data.Models
 {
-    public class Employee
+    public class Employee : BaseEntity<long>
     {
-        [Key]
-        public long EmployeeId { get; set; }
-
         public int DepartmentId { get; set; }
 
         [Required]
