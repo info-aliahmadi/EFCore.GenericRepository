@@ -44,9 +44,9 @@ namespace AspNetCore3._1.Controllers
 
             Employee v1 = await _repository.GetByIdAsync<Employee>(1);
 
-            await _context.Set<Employee>().Where(e => e.EmployeeId == 1).ToListAsync();
+            await _context.Set<Employee>().Where(e => e.Id == 1).ToListAsync();
 
-            _context.Set<Employee>().Where(e => e.EmployeeId == 1).ToList();
+            _context.Set<Employee>().Where(e => e.Id == 1).ToList();
             //await _unitOfWork.Repository<Employee>().GetEn
             return View(lists);
         }
@@ -58,7 +58,7 @@ namespace AspNetCore3._1.Controllers
             {
                 return NotFound();
             }
-            Employee employee = await _repository.GetByIdAsync<Employee>(id);
+            Employee employee = await _repository.GetByIdAsync<Employee>(id??0);
             if (employee == null)
             {
                 return NotFound();
@@ -96,7 +96,7 @@ namespace AspNetCore3._1.Controllers
                 return NotFound();
             }
 
-            Employee employee = await _repository.GetByIdAsync<Employee>(id);
+            Employee employee = await _repository.GetByIdAsync<Employee>(id??0);
             if (employee == null)
             {
                 return NotFound();
@@ -116,14 +116,14 @@ namespace AspNetCore3._1.Controllers
                 throw new ArgumentNullException(nameof(employee));
             }
 
-            if (id != employee.EmployeeId)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                Employee employeeToBeUpdated = await _repository.GetByIdAsync<Employee>(employee.EmployeeId);
+                Employee employeeToBeUpdated = await _repository.GetByIdAsync<Employee>(employee.Id);
                 employeeToBeUpdated.EmployeeName = employee.EmployeeName;
                 employeeToBeUpdated.DepartmentName = employee.DepartmentName;
                 await _repository.UpdateAsync(employeeToBeUpdated);
@@ -140,7 +140,7 @@ namespace AspNetCore3._1.Controllers
                 return NotFound();
             }
 
-            Employee employee = await _repository.GetByIdAsync<Employee>(id);
+            Employee employee = await _repository.GetByIdAsync<Employee>(id??0);
             if (employee == null)
             {
                 return NotFound();

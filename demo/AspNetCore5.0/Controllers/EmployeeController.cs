@@ -51,8 +51,8 @@ namespace AspNetCore5._0.Controllers
             {
                 return NotFound();
             }
-            Employee employee = await _repository.GetByIdAsync<Employee>(id);
-            bool isExistent = await _repository.ExistsByIdAsync<Employee>(id);
+            Employee employee = await _repository.GetByIdAsync<Employee>(id??0);
+            bool isExistent = await _repository.ExistsByIdAsync<Employee>(id??0);
             if (employee == null)
             {
                 return NotFound();
@@ -116,7 +116,7 @@ namespace AspNetCore5._0.Controllers
                 return NotFound();
             }
 
-            Employee employee = await _repository.GetByIdAsync<Employee>(id);
+            Employee employee = await _repository.GetByIdAsync<Employee>(id ?? 0);
             if (employee == null)
             {
                 return NotFound();
@@ -136,14 +136,14 @@ namespace AspNetCore5._0.Controllers
                 throw new ArgumentNullException(nameof(employee));
             }
 
-            if (id != employee.EmployeeId)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                Employee employeeToBeUpdated = await _repository.GetByIdAsync<Employee>(employee.EmployeeId);
+                Employee employeeToBeUpdated = await _repository.GetByIdAsync<Employee>(employee.Id);
                 employeeToBeUpdated.EmployeeName = employee.EmployeeName;
                 employeeToBeUpdated.DepartmentName = employee.DepartmentName;
                 await _repository.UpdateAsync(employeeToBeUpdated);
@@ -160,7 +160,7 @@ namespace AspNetCore5._0.Controllers
                 return NotFound();
             }
 
-            Employee employee = await _repository.GetByIdAsync<Employee>(id);
+            Employee employee = await _repository.GetByIdAsync<Employee>(id??0);
             if (employee == null)
             {
                 return NotFound();

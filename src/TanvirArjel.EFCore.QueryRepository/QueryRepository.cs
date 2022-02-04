@@ -251,53 +251,34 @@ namespace TanvirArjel.EFCore.GenericRepository
             return paginatedList;
         }
 
-        public Task<T> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default)
-            where T : BaseEntity<object>
+        public Task<T> GetByIdAsync<T>(int id, CancellationToken cancellationToken = default)
+            where T : BaseEntity<int>
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
             return GetByIdAsync<T>(id, false, cancellationToken);
         }
 
-        public Task<T> GetByIdAsync<T>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
-            where T : BaseEntity<object>
+        public Task<T> GetByIdAsync<T>(int id, bool asNoTracking, CancellationToken cancellationToken = default)
+            where T : BaseEntity<int>
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
             return GetByIdAsync<T>(id, null, asNoTracking, cancellationToken);
         }
 
         public Task<T> GetByIdAsync<T>(
-            object id,
+            int id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             CancellationToken cancellationToken = default)
-            where T : BaseEntity<object>
+            where T : BaseEntity<int>
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
             return GetByIdAsync(id, includes, false, cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync<T,T2>(
-            T2 id,
+        public async Task<T> GetByIdAsync<T>(
+            int id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             bool asNoTracking = false,
             CancellationToken cancellationToken = default)
-            where T : BaseEntity<T2>
+            where T : BaseEntity<int>
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
 
             IQueryable<T> query = _dbContext.Set<T>();
 
@@ -310,20 +291,147 @@ namespace TanvirArjel.EFCore.GenericRepository
             {
                 query = query.AsNoTracking();
             }
-            T enity = await query.FirstOrDefaultAsync(x => x.Id == id).FirstOrDefaultAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            T enity = await query.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             return enity;
         }
 
         public async Task<TProjectedType> GetByIdAsync<T, TProjectedType>(
-            object id,
+            int id,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
-            where T : BaseEntity<object>
+            where T : BaseEntity<int>
         {
-            if (id == null)
+
+            if (selectExpression == null)
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentNullException(nameof(selectExpression));
             }
+
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            return await query.Where(x => x.Id == id).Select(selectExpression)
+                .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public Task<T> GetByIdAsync<T>(long id, CancellationToken cancellationToken = default)
+            where T : BaseEntity<long>
+        {
+
+            return GetByIdAsync<T>(id, false, cancellationToken);
+        }
+
+        public Task<T> GetByIdAsync<T>(long id, bool asNoTracking, CancellationToken cancellationToken = default)
+            where T : BaseEntity<long>
+        {
+
+            return GetByIdAsync<T>(id, null, asNoTracking, cancellationToken);
+        }
+
+        public Task<T> GetByIdAsync<T>(
+            long id,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            CancellationToken cancellationToken = default)
+            where T : BaseEntity<long>
+        {
+
+            return GetByIdAsync(id, includes, false, cancellationToken);
+        }
+
+        public async Task<T> GetByIdAsync<T>(
+            long id,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            bool asNoTracking = false,
+            CancellationToken cancellationToken = default)
+            where T : BaseEntity<long>
+        {
+
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+
+            if (asNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            T enity = await query.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return enity;
+        }
+
+        public async Task<TProjectedType> GetByIdAsync<T, TProjectedType>(
+            long id,
+            Expression<Func<T, TProjectedType>> selectExpression,
+            CancellationToken cancellationToken = default)
+            where T : BaseEntity<long>
+        {
+
+            if (selectExpression == null)
+            {
+                throw new ArgumentNullException(nameof(selectExpression));
+            }
+
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            return await query.Where(x => x.Id == id).Select(selectExpression)
+                .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public Task<T> GetByIdAsync<T>(Guid id, CancellationToken cancellationToken = default)
+            where T : BaseEntity<Guid>
+        {
+            return GetByIdAsync<T>(id, false, cancellationToken);
+        }
+
+        public Task<T> GetByIdAsync<T>(Guid id, bool asNoTracking, CancellationToken cancellationToken = default)
+            where T : BaseEntity<Guid>
+        {
+
+            return GetByIdAsync<T>(id, null, asNoTracking, cancellationToken);
+        }
+
+        public Task<T> GetByIdAsync<T>(
+            Guid id,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            CancellationToken cancellationToken = default)
+            where T : BaseEntity<Guid>
+        {
+
+            return GetByIdAsync(id, includes, false, cancellationToken);
+        }
+
+        public async Task<T> GetByIdAsync<T>(
+            Guid id,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            bool asNoTracking = false,
+            CancellationToken cancellationToken = default)
+            where T : BaseEntity<Guid>
+        {
+
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+
+            if (asNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+            T enity = await query.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return enity;
+        }
+
+        public async Task<TProjectedType> GetByIdAsync<T, TProjectedType>(
+            Guid id,
+            Expression<Func<T, TProjectedType>> selectExpression,
+            CancellationToken cancellationToken = default)
+            where T : BaseEntity<Guid>
+        {
 
             if (selectExpression == null)
             {
@@ -475,13 +583,27 @@ namespace TanvirArjel.EFCore.GenericRepository
             return isExists;
         }
 
-        public async Task<bool> ExistsByIdAsync<T>(object id, CancellationToken cancellationToken = default)
-           where T : BaseEntity<object>
+        public async Task<bool> ExistsByIdAsync<T>(int id, CancellationToken cancellationToken = default)
+           where T : BaseEntity<int>
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            bool isExistent = await query.AnyAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+            return isExistent;
+        }
+        public async Task<bool> ExistsByIdAsync<T>(long id, CancellationToken cancellationToken = default)
+           where T : BaseEntity<long>
+        {
+
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            bool isExistent = await query.AnyAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+            return isExistent;
+        }
+        public async Task<bool> ExistsByIdAsync<T>(Guid id, CancellationToken cancellationToken = default)
+           where T : BaseEntity<Guid>
+        {
 
             IQueryable<T> query = _dbContext.Set<T>();
 

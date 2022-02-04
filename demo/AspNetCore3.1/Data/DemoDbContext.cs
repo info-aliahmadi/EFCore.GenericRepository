@@ -19,7 +19,7 @@ namespace AspNetCore3._1.Data
             }
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Employee>().HasKey(e => e.EmployeeId);
+            modelBuilder.Entity<Employee>().HasKey(e => e.Id);
         }
 
         public DbSet<AspNetCore3._1.Data.Models.Employee> Employee { get; set; }

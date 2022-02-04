@@ -226,6 +226,11 @@ namespace TanvirArjel.EFCore.GenericRepository
             where TEntity : class
             where TProjectedType : class;
 
+
+
+        #region GetByIdAsync For int Id
+
+
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
         /// if found otherwise <see langword="null"/>.
@@ -234,8 +239,8 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="id">The primary key value of the entity.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetByIdAsync<TEntity>(object id, CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity<object>;
+        Task<TEntity> GetByIdAsync<TEntity>(int id, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<int>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -248,8 +253,8 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetByIdAsync<TEntity>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity<object>;
+        Task<TEntity> GetByIdAsync<TEntity>(int id, bool asNoTracking, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<int>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -261,10 +266,10 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         Task<TEntity> GetByIdAsync<TEntity>(
-            object id,
+            int id,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity<object>;
+            where TEntity : BaseEntity<int>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -279,11 +284,11 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         Task<TEntity> GetByIdAsync<TEntity>(
-            object id,
+            int id,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity<object>;
+            where TEntity : BaseEntity<int>;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the specified projected entity
@@ -297,10 +302,179 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <returns>Returns <see cref="Task"/> of <typeparamref name="TProjectedType"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is <see langword="null"/>.</exception>
         Task<TProjectedType> GetByIdAsync<TEntity, TProjectedType>(
-            object id,
+            int id,
             Expression<Func<TEntity, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity<object>;
+            where TEntity : BaseEntity<int>;
+
+        #endregion
+
+
+
+        #region GetByIdAsync For long Id
+
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(long id, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<long>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
+        /// EF Core context or not. Defualt value is false i.e trackig is enabled by default.
+        /// </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(long id, bool asNoTracking, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<long>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="includes">The navigation properties to be loaded.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(
+            long id,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<long>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="includes">The navigation properties to be loaded.</param>
+        /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
+        /// EF Core context or not. Defualt value is false i.e trackig is enabled by default.
+        /// </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(
+            long id,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
+            bool asNoTracking,
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<long>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the specified projected entity
+        /// if found otherwise null.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TProjectedType">The projected type.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="selectExpression">The <see cref="System.Linq"/> select query.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task"/> of <typeparamref name="TProjectedType"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is <see langword="null"/>.</exception>
+        Task<TProjectedType> GetByIdAsync<TEntity, TProjectedType>(
+            long id,
+            Expression<Func<TEntity, TProjectedType>> selectExpression,
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<long>;
+
+        #endregion
+
+
+
+
+        #region GetByIdAsync For Guid Id
+
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(Guid id, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<Guid>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
+        /// EF Core context or not. Defualt value is false i.e trackig is enabled by default.
+        /// </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(Guid id, bool asNoTracking, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<Guid>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="includes">The navigation properties to be loaded.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(
+            Guid id,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<Guid>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
+        /// if found otherwise <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="includes">The navigation properties to be loaded.</param>
+        /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
+        /// EF Core context or not. Defualt value is false i.e trackig is enabled by default.
+        /// </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
+        Task<TEntity> GetByIdAsync<TEntity>(
+            Guid id,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
+            bool asNoTracking,
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<Guid>;
+
+        /// <summary>
+        /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the specified projected entity
+        /// if found otherwise null.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TProjectedType">The projected type.</typeparam>
+        /// <param name="id">The primary key value of the entity.</param>
+        /// <param name="selectExpression">The <see cref="System.Linq"/> select query.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="Task"/> of <typeparamref name="TProjectedType"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is <see langword="null"/>.</exception>
+        Task<TProjectedType> GetByIdAsync<TEntity, TProjectedType>(
+            Guid id,
+            Expression<Func<TEntity, TProjectedType>> selectExpression,
+            CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<Guid>;
+
+        #endregion
 
         /// <summary>
         /// This method takes <see cref="Expression{Func}"/> as parameter and returns <typeparamref name="TEntity"/>.
@@ -451,8 +625,31 @@ namespace TanvirArjel.EFCore.GenericRepository
         /// <param name="id">The primary key value of the entity whose the existence will checked.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="bool"/>.</returns>
-        Task<bool> ExistsByIdAsync<TEntity>(object id, CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity<object>;
+        Task<bool> ExistsByIdAsync<TEntity>(int id, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<int>;
+
+        /// <summary>
+        /// This method takes primary key value of the entity whose existence be determined
+        /// and returns <see cref="Task"/> of <see cref="bool"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity whose the existence will checked.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="bool"/>.</returns>
+        Task<bool> ExistsByIdAsync<TEntity>(long id, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<long>;
+
+
+        /// <summary>
+        /// This method takes primary key value of the entity whose existence be determined
+        /// and returns <see cref="Task"/> of <see cref="bool"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="id">The primary key value of the entity whose the existence will checked.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>Returns <see cref="bool"/>.</returns>
+        Task<bool> ExistsByIdAsync<TEntity>(Guid id, CancellationToken cancellationToken = default)
+            where TEntity : BaseEntity<Guid>;
 
         /// <summary>
         /// This method returns all count in <see cref="int"/> type.
